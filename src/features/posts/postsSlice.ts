@@ -41,6 +41,8 @@ const postsSlice = createSlice({
       reducer(state, action: PayloadAction<PostType>) {
         state.push(action.payload)
       },
+      // prepare will take in arguments to postAdded action creator call
+      // and return a payload to be sent to reducer
       prepare(
         title: string,
         content: string,

@@ -41,7 +41,9 @@ export const EditPostForm = (props: RouteComponentProps<Props>) => {
     setRedirect(true)
   }
 
-  if (!post || redirect) return <Redirect to="/" />
+  if (!post) return <Redirect to="/" />
+
+  if (redirect) return <Redirect to={`/posts/${post.id}`} />
 
   return (
     <section>

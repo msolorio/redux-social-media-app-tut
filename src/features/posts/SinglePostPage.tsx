@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { RootState, PostType } from '../../app/store'
 import { PostAuthor } from './PostAuthor'
 import { TimeAgo } from './TimeAgo'
+import { ReactionButtons } from './ReactionButtons'
 
 interface Props {
   postId: string | undefined
@@ -30,6 +31,7 @@ export const SinglePostPage = (props: RouteComponentProps<Props>) => {
         <p className="post-content">
           {post.content}
         </p>
+        <ReactionButtons post={post} />
         <Link to={`/posts/${postId}/edit`} className="button">
           Edit Post
         </Link>
