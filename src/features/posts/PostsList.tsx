@@ -1,18 +1,27 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
-import { RootState } from '../../app/store'
+import { RootState, PostType } from '../../app/store'
 import { PostAuthor } from './PostAuthor'
+import { TimeAgo } from './TimeAgo'
+import { ReactionButtons } from './ReactionButtons'
 
 export const PostsList = () => {
-  const posts = useAppSelector((state: RootState) => state.posts)
+  const posts: PostType[] = useAppSelector((state: RootState) => state.posts)
+
+  const orderedPosts: PostType[] = posts
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date))
+
 
   const renderedPosts = posts.map((post) => {
     return (
       <article className="post-excerpt" key={post.id}>
         <h3>{post.title}</h3>
         <PostAuthor userId={post.user} />
+        <TimeAgo timestamp={post.date} />
         <p className="post-content">{post.content.substring(0, 100)} ...</p>
+        <ReactionButtons post={post} />
         <Link to={`/posts/${post.id}`} className="button muted-button">
           View Post
         </Link>

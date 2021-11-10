@@ -31,12 +31,11 @@ export const EditPostForm = (props: RouteComponentProps<Props>) => {
   
   const onSavePostClick = () => {
     if (!title || !content) return;
-    
+
     dispatch(postUpdated({
       id: postId,
       title,
-      content,
-      user: '0'
+      content
     }))
 
     setRedirect(true)

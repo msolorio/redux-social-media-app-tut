@@ -19,7 +19,19 @@ export interface PostType {
   id: string,
   title: string,
   content: string,
-  user: string
+  user: string,
+  date: string,
+  reactions: ReactionEmojis
 }
+
+export interface ReactionEmojis {
+  thumbsUp: number,
+  hooray: number,
+  heart: number,
+  rocket: number,
+  eyes: number
+}
+
+export type ReactionType = 'thumbsUp' | 'hooray' | 'heart' | 'rocket' | 'eyes'
 
 export default store
