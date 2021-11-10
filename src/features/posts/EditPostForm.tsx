@@ -35,7 +35,8 @@ export const EditPostForm = (props: RouteComponentProps<Props>) => {
     dispatch(postUpdated({
       id: postId,
       title,
-      content
+      content,
+      user: '0'
     }))
 
     setRedirect(true)

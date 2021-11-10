@@ -2,6 +2,7 @@ import React from 'react'
 import { Redirect, Link, RouteComponentProps } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState, PostType } from '../../app/store'
+import { PostAuthor } from './PostAuthor'
 
 interface Props {
   postId: string | undefined
@@ -23,6 +24,7 @@ export const SinglePostPage = (props: RouteComponentProps<Props>) => {
     <section>
       <article>
         <h2>{post.title}</h2>
+        <PostAuthor userId={post.user} />
         <p className="post-content">
           {post.content}
         </p>

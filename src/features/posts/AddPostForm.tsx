@@ -1,13 +1,18 @@
 import React, { useState, ChangeEvent } from 'react'
-import { useAppDispatch } from '../../app/hooks'
-import { nanoid } from '@reduxjs/toolkit'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { postAdded } from './postsSlice'
+import { RootState } from '../../app/store'
 
 export const AddPostForm = () => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
+  const [userId, setUserId] = useState('')
+
+  const canSave = title && content && userId
 
   const dispatch = useAppDispatch()
+
+  const users = useAppSelector((state: RootState) => state.users)
 
   const onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value)
@@ -17,14 +22,24 @@ export const AddPostForm = () => {
     setContent(event.target.value)
   }
 
-  const onSavePostClicked = () => {
-    if (!title || !content) return
+  const onAuthorChanged = (event: ChangeEvent<HTMLSelectElement>) => {
+    setUserId(event.target.value)
+  }
 
-    dispatch(postAdded(title, content))
+  const onSavePostClicked = () => {
+    if (!canSave) return
+
+    dispatch(postAdded(title, content, userId))
 
     setTitle('')
     setContent('')
   }
+
+  const usersOptions = users.map(user => (
+    <option key={user.id} value={user.id}>
+      {user.name}
+    </option>
+  ))
 
   return (
     <section>
@@ -41,6 +56,18 @@ export const AddPostForm = () => {
         </div>
 
         <div>
+          <label htmlFor="postAuthor">Author:</label>
+          <select
+            id="postAuthor" 
+            value={userId}
+            onChange={onAuthorChanged}
+          >
+            <option value="">--</option>
+            {usersOptions}
+          </select>
+        </div>
+
+        <div>
           <label htmlFor="postContent">Post Content:</label>
           <textarea
             id="postContent"
@@ -52,6 +79,7 @@ export const AddPostForm = () => {
         <button 
           type="button"
           onClick={onSavePostClicked}
+          disabled={!canSave}
         >
             Save Post
           </button>
