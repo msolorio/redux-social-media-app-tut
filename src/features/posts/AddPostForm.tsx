@@ -1,14 +1,15 @@
 import React, { useState, ChangeEvent } from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { postAdded } from './postsSlice'
+import { addNewPost } from './postsSlice'
 import { RootState } from '../../app/store'
 
 export const AddPostForm = () => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [userId, setUserId] = useState('')
+  const [addRequestStatus, setAddRequestStatus] = useState('idle')
 
-  const canSave = title && content && userId
+  const canSave = title && content && userId && addRequestStatus === 'idle'
 
   const dispatch = useAppDispatch()
 
@@ -26,21 +27,35 @@ export const AddPostForm = () => {
     setUserId(event.target.value)
   }
 
-  const onSavePostClicked = () => {
+  const onSavePostClicked = async () => {
     if (!canSave) return
 
-    const reactions = {
-      thumbsUp: 0,
-      hooray: 0,
-      heart: 0,
-      rocket: 0,
-      eyes: 0
+    try {
+      setAddRequestStatus('pending')
+
+      // .unwrap() allows dispatch to return an error on failure
+      // or send the returned data from the server
+      await dispatch(addNewPost({ title, content, user: userId })).unwrap()
+
+      setTitle('')
+      setContent('')
+      setUserId('')
+    } catch (err) {
+      console.log('Failed to save the post:', err)
+    } finally {
+      setAddRequestStatus('idle')
     }
 
-    dispatch(postAdded(title, content, userId, reactions))
+    // const reactions = {
+    //   thumbsUp: 0,
+    //   hooray: 0,
+    //   heart: 0,
+    //   rocket: 0,
+    //   eyes: 0
+    // }
 
-    setTitle('')
-    setContent('')
+    // dispatch(postAdded(title, content, userId, reactions))
+
   }
 
   const usersOptions = users.map(user => (

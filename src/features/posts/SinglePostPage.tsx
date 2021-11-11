@@ -1,7 +1,6 @@
 import React from 'react'
 import { Redirect, Link, RouteComponentProps } from 'react-router-dom'
 import { useAppSelector } from '../../app/hooks'
-import { RootState } from '../../app/store'
 import { PostType } from '../../app/store'
 import { selectPostById } from './postsSlice'
 import { PostAuthor } from './PostAuthor'

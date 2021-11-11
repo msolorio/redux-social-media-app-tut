@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import { RootState, PostType } from '../../app/store'
+import { PostType } from '../../app/store'
 import { selectAllPosts, fetchPosts } from './postsSlice'
 import { PostAuthor } from './PostAuthor'
 import { TimeAgo } from './TimeAgo'
@@ -49,8 +49,8 @@ export const PostsList = () => {
         const orderedPosts = posts
           .slice()
           .sort((a, b) => b.date.localeCompare(a.date))
-          .map((post) => {
-            return <PostExcerpt post={post} />
+          .map((post, idx) => {
+            return <PostExcerpt key={idx} post={post} />
           })
         
         return <>{orderedPosts}</>

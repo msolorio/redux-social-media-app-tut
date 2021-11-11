@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent } from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { postUpdated, selectPostById } from './postsSlice'
-import { RootState, PostType } from '../../app/store'
+import { PostType } from '../../app/store'
 
 interface Props {
   postId: string

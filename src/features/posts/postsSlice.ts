@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction, nanoid, createAsyncThunk } from '@reduxjs/toolkit'
-import { PostType, ReactionEmojis, ReactionType, RootState  } from '../../app/store'
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
+import { PostType, ReactionType, RootState  } from '../../app/store'
 import { client } from '../../api/client'
 
 // const initialState = [
@@ -52,34 +52,44 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
 })
 
 
+export const addNewPost = createAsyncThunk(
+  'posts/addNewPost',
+  async (initialPost: AddNewPostPayload) => {
+    const response = await client.post('/fakeApi/posts', initialPost)
+
+    return response.data
+  }
+)
+
+
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    postAdded: {
-      reducer(state, action: PayloadAction<PostType>) {
-        state.posts.push(action.payload)
-      },
-      // prepare will take in arguments to postAdded action creator call
-      // and return a payload to be sent to reducer
-      prepare(
-        title: string,
-        content: string,
-        userId: string,
-        reactions: ReactionEmojis
-      ) {
-        return {
-          payload: {
-            id: nanoid(),
-            date: new Date().toISOString(),
-            title,
-            content,
-            user: userId,
-            reactions: reactions
-          }
-        }
-      }
-    },
+    // postAdded: {
+    //   reducer(state, action: PayloadAction<PostType>) {
+    //     state.posts.push(action.payload)
+    //   },
+    //   // prepare will take in arguments to postAdded action creator call
+    //   // and return a payload to be sent to reducer
+    //   prepare(
+    //     title: string,
+    //     content: string,
+    //     userId: string,
+    //     reactions: ReactionEmojis
+    //   ) {
+    //     return {
+    //       payload: {
+    //         id: nanoid(),
+    //         date: new Date().toISOString(),
+    //         title,
+    //         content,
+    //         user: userId,
+    //         reactions: reactions
+    //       }
+    //     }
+    //   }
+    // },
 
 
     postUpdated(state, action: PayloadAction<PostUpdatedPayload>) {
@@ -119,6 +129,9 @@ const postsSlice = createSlice({
         state.status = 'failed'
         state.error = action.error.message || null
       })
+      .addCase(addNewPost.fulfilled, (state, action) => {
+        state.posts.push(action.payload)
+      })
   }
 })
 
@@ -128,18 +141,24 @@ export const selectPostById = (state: RootState, postId: string) => {
   return state.posts.posts.find(post => post.id === postId)
 }
 
-export const { postAdded, postUpdated, reactionIncremented } = postsSlice.actions
+export const { postUpdated, reactionIncremented } = postsSlice.actions
 
 export default postsSlice.reducer
 
 
 interface PostUpdatedPayload {
-  id: string,
-  title: string,
+  id: string
+  title: string
   content: string
 }
 
 interface ReactionIncPayload {
-  postId: string,
+  postId: string
   reaction: ReactionType
+}
+
+interface AddNewPostPayload {
+  title: string
+  content: string
+  user: string
 }
