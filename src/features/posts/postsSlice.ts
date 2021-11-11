@@ -120,8 +120,6 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = 'succeeded'
-
-        // console.log('action.payload after fetchPost fulfilled ==>', action.payload);
         
         state.posts = state.posts.concat(action.payload)
       })
