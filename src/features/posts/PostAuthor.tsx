@@ -1,9 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../app/store'
+import { useAppSelector } from '../../app/hooks'
 
-export const PostAuthor = ({ userId }: any) => {
-  const author = useSelector((state: RootState) => {
+interface Props {
+  userId: string
+}
+
+export const PostAuthor = ({ userId }: Props) => {
+  const author = useAppSelector((state) => {
     return state.users.find(user => user.id === userId)
   })
 

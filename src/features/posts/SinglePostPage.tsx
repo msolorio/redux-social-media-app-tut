@@ -1,27 +1,26 @@
 import React from 'react'
 import { Redirect, Link, RouteComponentProps } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { RootState, PostType } from '../../app/store'
+import { useAppSelector } from '../../app/hooks'
+import { RootState } from '../../app/store'
+import { PostType } from '../../app/store'
+import { selectPostById } from './postsSlice'
 import { PostAuthor } from './PostAuthor'
 import { TimeAgo } from './TimeAgo'
 import { ReactionButtons } from './ReactionButtons'
 
 interface Props {
-  postId: string | undefined
+  postId: string
 }
 
 export const SinglePostPage = (props: RouteComponentProps<Props>) => {
-  console.log('props ==>', props);
-  
-
   const { postId } = props.match.params
 
-  const post = useSelector((state: RootState) => {
-    return state.posts.find((post: PostType) => post.id === postId)
+  const post: PostType | undefined = useAppSelector((state) => {
+    return selectPostById(state, postId)
   })
 
   if (!post) return <Redirect to="/" />
-
+  
   return (
     <section>
       <article>

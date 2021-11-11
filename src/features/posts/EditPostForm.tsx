@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { postUpdated } from './postsSlice'
+import { postUpdated, selectPostById } from './postsSlice'
 import { RootState, PostType } from '../../app/store'
 
 interface Props {
@@ -13,12 +13,13 @@ export const EditPostForm = (props: RouteComponentProps<Props>) => {
   
   const { postId } = props.match.params
   
-  const post: PostType | undefined = useAppSelector((state: RootState) => {
-    return state.posts.find((post: PostType) => post.id === postId)
+  const post: PostType | undefined = useAppSelector((state) => {
+    return selectPostById(state, postId)
   })
 
-  const [title, setTitle] = useState(post?.title || '')
-  const [content, setContent] = useState(post?.content || '')
+  
+  const [title, setTitle] = useState(post?.title)
+  const [content, setContent] = useState(post?.content)
   const [redirect, setRedirect] = useState(false)
   
   const onTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +32,7 @@ export const EditPostForm = (props: RouteComponentProps<Props>) => {
   
   const onSavePostClick = () => {
     if (!title || !content) return;
-
+    
     dispatch(postUpdated({
       id: postId,
       title,
@@ -42,7 +43,7 @@ export const EditPostForm = (props: RouteComponentProps<Props>) => {
   }
 
   if (!post) return <Redirect to="/" />
-
+  
   if (redirect) return <Redirect to={`/posts/${post.id}`} />
 
   return (
